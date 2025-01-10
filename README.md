@@ -23,32 +23,38 @@ npm install cleana
 ## Usage
 
 ```ts
-import { cleana, CleanaOptions } from "cleana"
+import { cleana, CleanaOptions } from "cleana";
 
-const object: CleanaOptions = {
-	array: [],
-	object: {},
-	string: "",
-	nan: Number.NaN,
-	und: undefined,
-	value: "123",
-	nested: {
-		arr: ["", [], {}],
-		obj: { key: {}, key2: [] },
-		nestedValue: "456"
-	}
+const dataToClean: CleanaOptions = {
+    array: [],
+    object: {},
+    string: "",
+    nan: Number.NaN,
+    und: undefined,
+    value: "123",
+    nested: {
+        arr: ["", [], {}],
+        obj: { key: {}, key2: [] },
+        nestedValue: "456"
+    }
+};
+
+// Clean the object using Cleana
+const cleanedData = cleana(dataToClean);
+
+// Output the cleaned object
+console.log(cleanedData);
+
+/*
+Expected Output:
+
+{
+  value: "123",
+  nested: {
+    nestedValue: "456"
+  }
 }
-
-cleanDeep(object)
-
-// Output:
-//
-// {
-//   value: "123",
-//   nested: {
-//     nestedValue: "456",
-//   },
-// }
+*/
 ```
 
 ## Configuration
