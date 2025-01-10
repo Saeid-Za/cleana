@@ -1,11 +1,7 @@
 # 🧼 Cleana
 
-<!-- automd:badges color=yellow -->
-
 [![npm version](https://img.shields.io/npm/v/cleana?color=yellow)](https://npmjs.com/package/cleana)
 [![npm downloads](https://img.shields.io/npm/dm/cleana?color=yellow)](https://npm.chart.dev/cleana)
-
-<!-- /automd -->
 
 Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.
 
@@ -14,8 +10,6 @@ Cleana efficiently sanitize both JavaScript Objects and Arrays by removing unwan
 ## Install
 
 Install package:
-
-<!-- automd:pm-install -->
 
 ```sh
 npm install cleana
