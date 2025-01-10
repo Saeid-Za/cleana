@@ -82,7 +82,7 @@ Cleana is designed to be quicker than its predecessors.
 
 ![Benchmark for small-sized json](./assets/benchmark-small.png)
 
-Benchmark code is located at ``
+Benchmark code is located [here](https://github.com/Saeid-Za/cleana/tree/main/benchmark).
 
 **All-in-One Features**
 <br>
