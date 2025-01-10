@@ -88,7 +88,7 @@ Benchmark code is located [here](https://github.com/Saeid-Za/cleana/tree/main/be
 <br>
 Cleana combines the best functionalities from the libraries mentioned above. This means you get a set of tools for cleaning JavaScript objects all in one place.
 
-**Lightweight, Easy to Use and fully tested**
+**Lightweight and fully tested**
 <br>
 Cleana has no external dependencies. Its lightweight design helps keep your application running without unnecessary bloat. Cleana is `3.1KB` when built and `<1 KB` when Gzipped, and has `100%` test coverage.
 
