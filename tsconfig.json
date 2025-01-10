@@ -1,0 +1,48 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": [
+			"es2022"
+		],
+		"moduleDetection": "force",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"baseUrl": ".",
+		"module": "preserve",
+		"moduleResolution": "Bundler",
+		"paths": {
+			"~": [
+				"src"
+			],
+			"~/*": [
+				"src/*"
+			]
+		},
+		"resolveJsonModule": true,
+		"types": [
+			"vite/client",
+			"node"
+		],
+		"allowJs": true,
+		"strict": true,
+		"strictNullChecks": true,
+		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noUncheckedIndexedAccess": true,
+		"declaration": false,
+		"importHelpers": true,
+		"noEmit": true,
+		"outDir": "./dist",
+		"removeComments": true,
+		"sourceMap": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true
+	},
+	"include": [
+		"src/**/*"
+	]
+}
