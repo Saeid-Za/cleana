@@ -27,7 +27,7 @@
 		"prepack": "npm run build",
 		"prepare:benchmark": "jiti benchmark/init.ts",
 		"benchmark": "jiti benchmark/index.ts",
-		"release": "npm run test && changelogen --release && npm publish && git push --follow-tags",
+		"release": "npm run test && npm publish && git push --follow-tags",
 		"test": "vitest run --coverage"
 	},
 	"devDependencies": {
