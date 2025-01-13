@@ -1,3 +1,4 @@
+# Changelogs
 
 ## v1.1.0
 
@@ -10,6 +11,16 @@
 ### 🏡 Chore
 
 - Update deps ([e235c3c](https://github.com/Saeid-Za/cleana/commit/e235c3c))
+
+### ❤️ Contributors
+
+- Saeid Zareie <saeid.za98@gmail.com>
+
+
+## v1.0.0
+
+### 🚀 Enhancements
+- Init Project
 
 ### ❤️ Contributors
 
