@@ -1,4 +1,5 @@
 import type { CleanaOptions, Cleaned } from "./types"
+import { deepEqual } from "./utils"
 
 export function cleana<T>(data: T, options: CleanaOptions = {}): Cleaned<T> {
 	options.inPlace ??= false
@@ -9,6 +10,7 @@ export function cleana<T>(data: T, options: CleanaOptions = {}): Cleaned<T> {
 	options.cleanNaN ??= true
 	options.cleanUndefined ??= true
 	options.removeKeys ??= []
+	options.removeValues ??= []
 
 	if (!data)
 		return data as Cleaned<T>
@@ -28,6 +30,14 @@ function cleanArray<T>(arr: T[], options: CleanaOptions): T[] {
 
 	for (let i = 0; i < arr.length; i++) {
 		const item = arr[i]
+
+		if (shouldRemoveValue(options, item)) {
+			if (isInPlace) {
+				arr.splice(i, 1)
+				i--
+			}
+			continue
+		}
 
 		if (Array.isArray(item)) {
 			const cleanedItem = cleanArray(item, options)
@@ -53,7 +63,7 @@ function cleanArray<T>(arr: T[], options: CleanaOptions): T[] {
 				i--
 			}
 		}
-		else if (!shouldRemoveValue(item, options)) {
+		else if (!shouldRemovePrimitive(item, options)) {
 			if (!isInPlace) {
 				result.push(item as T)
 			}
@@ -74,7 +84,13 @@ function cleanObject<T extends Record<string, unknown>>(object: T, options: Clea
 	for (const key in object) {
 		const value = object[key]
 
-		if (options.removeKeys!.length && options.removeKeys!.includes(key)) {
+		if (shouldRemoveKey(options, key)) {
+			if (isInPlace)
+				delete output[key]
+			continue
+		}
+
+		if (shouldRemoveValue(options, value)) {
 			if (isInPlace)
 				delete output[key]
 			continue
@@ -101,7 +117,7 @@ function cleanObject<T extends Record<string, unknown>>(object: T, options: Clea
 			}
 		}
 		else {
-			const shouldKeep = !shouldRemoveValue(value, options)
+			const shouldKeep = !shouldRemovePrimitive(value, options)
 			if (!isInPlace && shouldKeep) {
 				output[key] = value
 			}
@@ -118,6 +134,23 @@ function isObject(value: any): value is Record<string, unknown> {
 	return value !== null && typeof value === "object" && !Array.isArray(value)
 }
 
+function shouldRemoveKey(options: CleanaOptions, key: string) {
+	return options.removeKeys!.length && options.removeKeys!.includes(key)
+}
+
+function shouldRemoveValue(options: CleanaOptions, value: any) {
+	if (options.removeValues!.length === 0)
+		return false
+
+	for (let index = 0; index < options.removeValues!.length; index++) {
+		const isEqual = deepEqual(value, options.removeValues![index])
+		if (isEqual)
+			return true
+	}
+
+	return false
+}
+
 function shouldReturnArray(arr: any[], options: CleanaOptions): boolean {
 	return !options.cleanArray || arr.length > 0
 }
@@ -126,7 +159,7 @@ function shouldReturnObject(object: Record<string, any>, options: CleanaOptions)
 	return !options.cleanObject || Object.keys(object).length > 0
 }
 
-function shouldRemoveValue(value: any, options: CleanaOptions): boolean {
+function shouldRemovePrimitive(value: any, options: CleanaOptions): boolean {
 	if (value === null)
 		return !!options.cleanNull
 

@@ -6,6 +6,9 @@ export default defineConfig({
 			include: [
 				"**/src/**",
 			],
+			exclude: [
+				"**/src/utils.ts",
+			],
 		},
 	},
 })

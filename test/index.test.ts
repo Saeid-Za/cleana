@@ -200,16 +200,29 @@ describe("cleaner", () => {
 		expect(cleana(input, { cleanArray: false })).toEqual(expected)
 	})
 
-	it("remove specefic keys", () => {
+	it("should remove specefic keys", () => {
 		const input = { a: { b: { c: 1, d: 2, e: 3 }, e: 5 } }
 		const expected = { a: { b: { d: 2 } } }
 		expect(cleana(input, { removeKeys: ["e", "c"] })).toEqual(expected)
 	})
 
-	it("remove specefic keys - in place", () => {
+	it("should remove specefic keys - in place", () => {
 		const input = { a: { b: { c: 1, d: 2, e: 3 }, e: 5 } }
 		const expected = { a: { b: { d: 2 } } }
 		expect(cleana(input, { removeKeys: ["e", "c"], inPlace: true })).toEqual(expected)
+		expect(input).toEqual(expected)
+	})
+
+	it("should remove specefic values", () => {
+		const input = { a: { b: { c: 1, d: 2, e: 3, u: "55", g: false }, e: 5 }, v: { g: 100 } }
+		const expected = { a: { b: { d: 2 }, e: 5 } }
+		expect(cleana(input, { removeValues: [1, 3, false, "55", { g: 100 }] })).toEqual(expected)
+	})
+
+	it("should remove specefic values - in place", () => {
+		const input = { a: { b: { c: 1, d: 2, e: 3, u: "55", g: false }, e: 5, z: [1, "55", true] } }
+		const expected = { a: { b: { d: 2 }, e: 5, z: [true] } }
+		expect(cleana(input, { inPlace: true, removeValues: [1, 3, false, "55"] })).toEqual(expected)
 		expect(input).toEqual(expected)
 	})
 

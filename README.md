@@ -1,9 +1,9 @@
 # 🧼 Cleana
 
+Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.
+
 [![npm version](https://img.shields.io/npm/v/cleana?color=yellow)](https://npmjs.com/package/cleana)
 [![npm downloads](https://img.shields.io/npm/dm/cleana?color=yellow)](https://npm.chart.dev/cleana)
-
-Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.
 
 Cleana efficiently sanitize both JavaScript Objects and Arrays by removing unwanted values such as `undefined`, `NaN`, empty objects `{}` and empty arrays `[]`.
 
@@ -17,31 +17,25 @@ npm install cleana
 ## Usage
 
 ```ts
-import { cleana, CleanaOptions } from "cleana";
+import { cleana } from "cleana"
 
-const dataToClean: CleanaOptions = {
-    array: [],
-    object: {},
-    string: "",
-    nan: Number.NaN,
-    und: undefined,
-    value: "123",
-    nested: {
-        arr: ["", [], {}],
-        obj: { key: {}, key2: [] },
-        nestedValue: "456"
-    }
-};
+const input = {
+	array: [],
+	object: {},
+	string: "",
+	nan: Number.NaN,
+	und: undefined,
+	value: "123",
+	nested: {
+		arr: ["", [], {}],
+		obj: { key: {}, key2: [] },
+		nestedValue: "456"
+	}
+}
 
-// Clean the object using Cleana
-const cleanedData = cleana(dataToClean);
-
-// Output the cleaned object
-console.log(cleanedData);
+const output = cleana(input)
 
 /*
-Expected Output:
-
 {
   value: "123",
   nested: {
@@ -55,16 +49,17 @@ Expected Output:
 
 Cleana takes argument object of type `CleanaOptions`:
 
-| Option          | Type          | Description                                                             | Default  |
-|-----------------|---------------|-------------------------------------------------------------------------|----------|
-| `cleanArray`    | `boolean`     | Remove empty arrays, e.g., `[]`                                        | `true`   |
-| `cleanObject`   | `boolean`     | Remove empty objects, e.g., `{}`                                       | `true`   |
-| `cleanNull`     | `boolean`     | Remove null values                                                      | `true`   |
-| `cleanUndefined`| `boolean`     | Remove undefined values                                                 | `true`   |
-| `cleanString`   | `boolean`     | Remove empty strings, e.g., `""`                                       | `true`   |
-| `cleanNaN`      | `boolean`     | Remove NaN values                                                      | `true`   |
-| `removeKeys`    | `string[]`    | Forcefully remove keys, e.g., `["key1", "key2"]`                      | `[]`     |
-| `inPlace`       | `boolean`     | Create a new object that is cleaned or mutate the object passed to it & clean in place | `false`  |
+| Option           | Type       | Description                                                                                                              | Default |
+| ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------ | ------- |
+| `cleanArray`     | `boolean`  | Remove empty arrays, e.g., `[]`                                                                                          | `true`  |
+| `cleanObject`    | `boolean`  | Remove empty objects, e.g., `{}`                                                                                         | `true`  |
+| `cleanNull`      | `boolean`  | Remove null values                                                                                                       | `true`  |
+| `cleanUndefined` | `boolean`  | Remove undefined values                                                                                                  | `true`  |
+| `cleanString`    | `boolean`  | Remove empty strings, e.g., `""`                                                                                         | `true`  |
+| `cleanNaN`       | `boolean`  | Remove NaN values                                                                                                        | `true`  |
+| `removeKeys`     | `string[]` | Forcefully remove keys, e.g., `["key1", "key2"]`                                                                         | `[]`    |
+| `removeValues`   | `any[]`    | Forcefully remove values, ie: ["someString", 123, false, `{key: "123"}`], using the `fast-deep-equal` to check equality. | `[]`    |
+| `inPlace`        | `boolean`  | Create a new object that is cleaned or mutate the object passed to it & clean in place                                   | `false` |
 
 ## What makes this library unique
 
@@ -84,7 +79,48 @@ Cleana combines the best functionalities from the libraries mentioned above. Thi
 
 **Lightweight and fully tested**
 <br>
-Cleana has no external dependencies. Its lightweight design helps keep your application running without unnecessary bloat. Cleana is `3.1KB` when built and `<1 KB` when Gzipped, and has `100%` test coverage.
+Cleana has no external dependencies. Its lightweight design helps keep your application running without unnecessary bloat. Cleana is around `1 KB` when Gzipped, and has `100%` test coverage.
+
+---
+This benchmark runs against the available test cases, It is recommended to benchmark against your data using the benchmark source code.
+
+## Examples
+
+Do not Clean null Values
+```ts
+const options: CleanaOptions = { cleanNull: false }
+const input = { a: Number.NaN, b: null, c: "", d: 42 }
+
+cleana(input, options)
+// { d: 42, b: null }
+```
+Remove Specefic keys
+
+```ts
+const input = { a: { b: { c: 1, d: 2, e: 3 }, e: 5 } }
+const options = { removeKeys: ["e", "c"] }
+
+cleana(input, options)
+// { a: { b: { d: 2 } } }
+```
+
+Remove Specefic values
+```ts
+const input = { a: { b: { c: 1, d: 2, e: 3, u: "55", g: false }, e: 5 }, v: { g: 100 } }
+const options = { removeValues: [1, 3, false, "55", { g: 100 }] }
+
+cleana(input, options)
+// { a: { b: { d: 2 }, e: 5 } }
+```
+
+Clean in-place
+```ts
+const input = { a: null, b: Number.NaN, c: "", d: 42 }
+const options = { inPlace: true }
+
+cleana(input, options)
+// input is equal to `{d: 42}`
+```
 
 ## Development
 
@@ -103,19 +139,11 @@ Cleana has no external dependencies. Its lightweight design helps keep your appl
 
 <!-- automd:contributors license=MIT -->
 
-Published under the [MIT](https://github.com/unjs/cleana/blob/main/LICENSE) license.
-Made by [community](https://github.com/unjs/cleana/graphs/contributors) 💛
+Published under the [MIT](https://github.com/Saeid-Za/cleana/blob/main/LICENSE) license.
+Made by [community](https://github.com/Saeid-Za/cleana/graphs/contributors) 💛
 <br><br>
-<a href="https://github.com/unjs/cleana/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=unjs/cleana" />
+<a href="https://github.com/Saeid-Za/cleana/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=Saeid-Za/cleana" />
 </a>
-
-<!-- /automd -->
-
-<!-- automd:with-automd -->
-
----
-
-_🤖 auto updated with [automd](https://automd.unjs.io)_
 
 <!-- /automd -->

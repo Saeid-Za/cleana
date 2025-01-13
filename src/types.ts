@@ -12,6 +12,14 @@ export type CleanaOptions = {
 	removeKeys?: string[]
 
 	/**
+	 * Forcefully remove values, ie: ["someString", 123, false, {key: "123"}]
+	 *
+	 * It uses the `fast-deep-equal` operator to check equality.
+	 * @default []
+	 */
+	removeValues?: any[]
+
+	/**
 	 * Remove empty arrays, ie: []
 	 * @default true
 	 */
@@ -47,5 +55,7 @@ export type CleanaOptions = {
 	 */
 	cleanNaN?: boolean
 }
+
+export type InternalCleanaConfig = CleanaOptions & { visitedSet: WeakSet<any> }
 
 export type Cleaned<T> = T extends Array<infer U> ? Partial<U>[] : Partial<T>
