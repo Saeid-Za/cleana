@@ -1,5 +1,17 @@
 # Changelogs
 
+## v1.1.1
+
+[compare changes](https://github.com/Saeid-Za/cleana/compare/v1.1.0...v1.1.1)
+
+### 🩹 Fixes
+
+- Prototype checking to handle dates ([01fd1b1](https://github.com/Saeid-Za/cleana/commit/01fd1b1))
+
+### ❤️ Contributors
+
+- Saeid Zareie <saeid.za98@gmail.com>
+
 ## v1.1.0
 
 [compare changes](https://github.com/Saeid-Za/cleana/compare/v1.0.0...v1.1.0)
