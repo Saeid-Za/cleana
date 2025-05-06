@@ -131,7 +131,7 @@ function cleanObject<T extends Record<string, unknown>>(object: T, options: Clea
 }
 
 function isObject(value: any): value is Record<string, unknown> {
-	return value !== null && typeof value === "object" && !Array.isArray(value)
+	return value !== null && typeof value === "object" && Object.prototype.toString.call(value) === "[object Object]"
 }
 
 function shouldRemoveKey(options: CleanaOptions, key: string) {

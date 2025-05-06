@@ -233,4 +233,26 @@ describe("cleaner", () => {
 		expect(cleana("")).toEqual("")
 		expect(cleana(null)).toEqual(null)
 	})
+
+	it("shouldn't clean date values", () => {
+		const date = new Date()
+		expect(cleana(date)).toEqual(date)
+		expect(cleana({ date })).toEqual({ date })
+	})
+
+	it("should be able to clean class instances", () => {
+		class Sample {
+			str: string | null
+			date: Date
+			obj: Record<string, any>
+			arr: Array<any>
+		}
+
+		const sample = new Sample()
+		sample.str = null
+		sample.date = new Date()
+		sample.arr = [1, "55", undefined, false, null]
+
+		expect(cleana(sample)).toEqual({ date: sample.date, arr: [1, "55", false] })
+	})
 })
