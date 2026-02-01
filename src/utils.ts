@@ -82,3 +82,19 @@ export function deepEqual(itemA: any, itemB: any): boolean {
 	// eslint-disable-next-line no-self-compare
 	return itemA !== itemA && itemB !== itemB
 }
+
+/**
+ * Detect “plain” objects for structural sharing decisions.
+ * Plain objects may reuse the original reference when unchanged.
+ * Class instances must be materialized into a new POJO even if unchanged.
+ *
+ * Accepts:
+ * - `{}` / `new Object()`
+ * - `Object.create(null)` (null-prototype dictionaries)
+ */
+export function isPlainObject(o: any): o is Record<string, any> {
+	if (o === null || typeof o !== "object")
+		return false
+	const p = Object.getPrototypeOf(o)
+	return p === Object.prototype || p === null
+}

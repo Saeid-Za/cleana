@@ -1,19 +1,20 @@
 import cleanDeep from "clean-deep"
 import { clean as deepCleaner } from "deep-cleaner"
-import { clean as fastClean } from "fast-clean"
+import { clean as fastClean, ICleanerOptions } from "fast-clean"
 import { bench, run, summary } from "mitata"
 import objClean from "obj-clean"
-import { cleana } from "../src"
+import { cleana, CleanaOptions } from "../src"
 import heavy from "./data/heavy.json"
 import medium from "./data/medium.json"
 import small from "./data/small.json"
 
-const fastCleanOptions = {
+const fastCleanOptions: ICleanerOptions = {
 	emptyArraysCleaner: true,
 	emptyObjectsCleaner: true,
 	emptyStringsCleaner: true,
 	nanCleaner: true,
 	nullCleaner: true,
+	cleanInPlace: false,
 }
 
 const cleanDeepOptions = {
@@ -25,12 +26,13 @@ const cleanDeepOptions = {
 	undefinedValues: true,
 }
 
-const cleanaOptions = {
+const cleanaOptions: CleanaOptions = {
 	cleanArray: true,
 	cleanNaN: true,
 	cleanNull: true,
 	cleanObject: true,
 	cleanString: true,
+	cleanUndefined: true,
 }
 
 const deepCleanerOptions = {
