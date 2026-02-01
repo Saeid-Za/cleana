@@ -2,25 +2,23 @@
 	"name": "cleana",
 	"type": "module",
 	"version": "1.1.1",
-	"description": "",
+	"description": "Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.",
 	"license": "MIT",
 	"repository": "Saeid-Za/cleana",
 	"sideEffects": false,
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
+			"import": "./dist/index.mjs"
 		}
 	},
-	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
 	"files": [
 		"dist"
 	],
 	"scripts": {
-		"build": "unbuild",
+		"build": "obuild ./src/index.ts",
 		"dev": "vitest dev",
 		"lint": "eslint . --fix",
 		"typecheck": "tsc --noEmit -p ./tsconfig.json",
@@ -31,20 +29,20 @@
 		"test": "vitest run --coverage"
 	},
 	"devDependencies": {
-		"@antfu/eslint-config": "^3.14.0",
-		"@types/node": "^22.10.5",
-		"@vitest/coverage-v8": "^2.1.8",
-		"automd": "^0.3.12",
-		"changelogen": "^0.5.7",
+		"@antfu/eslint-config": "^7.2.0",
+		"@types/node": "^25.2.0",
+		"@vitest/coverage-v8": "^4.0.18",
+		"automd": "^0.4.3",
+		"changelogen": "^0.6.2",
 		"clean-deep": "^3.4.0",
 		"deep-cleaner": "^2.0.0-alpha.3",
-		"eslint": "^9.18.0",
-		"fast-clean": "^1.4.0",
-		"jiti": "^2.4.2",
-		"mitata": "^1.0.28",
+		"eslint": "^9.39.2",
+		"fast-clean": "^1.5.3",
+		"jiti": "^2.6.1",
+		"mitata": "^1.0.34",
 		"obj-clean": "^3.0.1",
-		"typescript": "^5.7.3",
-		"unbuild": "^3.3.0",
-		"vitest": "^2.1.8"
+		"obuild": "^0.4.22",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.18"
 	}
 }
