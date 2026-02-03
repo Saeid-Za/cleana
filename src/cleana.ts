@@ -15,6 +15,9 @@ const SKIP = Symbol("cleana.skip")
 const OBJ_TAG = "[object Object]"
 const toString = Object.prototype.toString
 
+/** Shared empty set to avoid per-call allocation when removeKeys is not used. */
+const EMPTY_SET = new Set<string>()
+
 /**
  * Options compiled into a single bitfield.
  * This avoids repeated boolean lookups inside hot loops.
@@ -31,11 +34,24 @@ const F = {
 	HasRemoveValues: 1 << 8, // removeValues provided
 } as const
 
+const DEFAULT_FLAGS
+	= F.CleanArray | F.CleanObject | F.CleanNull | F.CleanString | F.CleanNaN | F.CleanUndefined
+
+/** Precomputed config for cleana() with no options; avoids per-call allocation. */
+const DEFAULT_NORMALIZED: Normalized = {
+	flags: DEFAULT_FLAGS,
+	removeKeysSet: EMPTY_SET,
+	removeValues: [],
+}
+
 /**
  * Normalize user options into a compact runtime config.
  * This function is called once per `cleana()` invocation.
  */
 function normalize(options: CleanaOptions = {}): Normalized {
+	if (!options || Reflect.ownKeys(options).length === 0)
+		return DEFAULT_NORMALIZED
+
 	const removeKeys = options.removeKeys ?? []
 	const removeValues = options.removeValues ?? []
 
@@ -62,7 +78,7 @@ function normalize(options: CleanaOptions = {}): Normalized {
 	return {
 		flags,
 		// Used only when HasRemoveKeys is enabled; otherwise it’s inert.
-		removeKeysSet: new Set(removeKeys),
+		removeKeysSet: removeKeys.length > 0 ? new Set(removeKeys) : EMPTY_SET,
 		removeValues,
 	}
 }
@@ -127,7 +143,7 @@ function cleanAny(value: any, cfg: Normalized): any | typeof SKIP {
 	}
 
 	// Recurse into record-like objects; preserve everything else intact.
-	return isCleanableObject(value) ? cleanObject(value, cfg) : value
+	return toString.call(value) === OBJ_TAG ? cleanObject(value, cfg) : value
 }
 
 /**
