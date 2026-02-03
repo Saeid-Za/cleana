@@ -32,6 +32,7 @@ const F = {
 	InPlace: 1 << 6, // mutate input arrays/objects instead of cloning
 	HasRemoveKeys: 1 << 7, // removeKeys provided
 	HasRemoveValues: 1 << 8, // removeValues provided
+	CircularReference: 1 << 9, // detect and remove circular references
 } as const
 
 const DEFAULT_FLAGS
@@ -42,6 +43,7 @@ const DEFAULT_NORMALIZED: Normalized = {
 	flags: DEFAULT_FLAGS,
 	removeKeysSet: EMPTY_SET,
 	removeValues: [],
+	visited: null,
 }
 
 /**
@@ -74,12 +76,16 @@ function normalize(options?: CleanaOptions): Normalized {
 		flags |= F.HasRemoveKeys
 	if (removeValues.length)
 		flags |= F.HasRemoveValues
+	if (options.circularReference ?? false)
+		flags |= F.CircularReference
 
 	return {
 		flags,
-		// Used only when HasRemoveKeys is enabled; otherwise it’s inert.
+		// Used only when HasRemoveKeys is enabled; otherwise it's inert.
 		removeKeysSet: removeKeys.length > 0 ? new Set(removeKeys) : EMPTY_SET,
 		removeValues,
+		// Allocated only when CircularReference is enabled; otherwise null.
+		visited: (flags & F.CircularReference) !== 0 ? new WeakSet() : null,
 	}
 }
 
@@ -100,11 +106,18 @@ export function cleana<T>(data: T, options?: CleanaOptions): Cleaned<T> {
 		return data as Cleaned<T>
 
 	// Root dispatch based on runtime type.
-	if (Array.isArray(data))
+	if (Array.isArray(data)) {
+		// Add root array to visited set if circular reference detection is enabled.
+		if (cfg.visited !== null)
+			cfg.visited.add(data)
 		return cleanArray(data as any[], cfg) as Cleaned<T>
+	}
 
 	if (isCleanableObject(data)) {
-		// Root object cannot “disappear”; if it becomes empty and CleanObject=true,
+		// Add root object to visited set if circular reference detection is enabled.
+		if (cfg.visited !== null)
+			cfg.visited.add(data)
+		// Root object cannot "disappear"; if it becomes empty and CleanObject=true,
 		// return {} instead of propagating SKIP.
 		const v = cleanObject(data as any, cfg)
 		return (v === SKIP ? ({} as any) : v) as Cleaned<T>
@@ -129,6 +142,14 @@ function cleanAny(value: any, cfg: Normalized): any | typeof SKIP {
 		if (hasRemoveValues && shouldRemoveValue(cfg.removeValues, value))
 			return SKIP
 		return shouldRemovePrimitive(value, flags) ? SKIP : value
+	}
+
+	// Circular reference detection (only when enabled).
+	const visited = cfg.visited
+	if (visited !== null) {
+		if (visited.has(value))
+			return SKIP
+		visited.add(value)
 	}
 
 	// Optional user-defined removals for objects too.
@@ -207,7 +228,7 @@ function cleanArray(arr: any[], cfg: Normalized): any[] {
  * - Plain objects are structurally shared (return original reference if unchanged).
  * - Class instances always produce a new plain object (POJO) even if unchanged.
  *
- * The fixed-size “stash” avoids allocations for tiny plain objects:
+ * The fixed-size "stash" avoids allocations for tiny plain objects:
  * - While we still believe the object is unchanged, we store up to 4 key/value pairs in locals.
  * - If we detect a change, we allocate `out` and flush the stashed pairs into it.
  */
@@ -415,4 +436,5 @@ type Normalized = {
 	flags: number
 	removeKeysSet: Set<string>
 	removeValues: readonly any[]
+	visited: WeakSet<object> | null
 }

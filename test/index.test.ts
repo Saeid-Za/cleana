@@ -491,4 +491,100 @@ describe("cleana", () => {
 			expect(out).not.toBe(input)
 		})
 	})
+
+	// ─── Circular references ─────────────────────────────────────────────────────
+	describe("circularReference", () => {
+		it("disabled by default: does not affect normal data", () => {
+			const input = { a: 1, b: { c: 2 } }
+			expect(cleana(input)).toEqual({ a: 1, b: { c: 2 } })
+		})
+
+		it("removes self-referencing object when enabled", () => {
+			const input: any = { a: 1 }
+			input.self = input
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: 1 })
+			expect("self" in (out as any)).toBe(false)
+		})
+
+		it("removes circular reference in nested object", () => {
+			const input: any = { a: 1, nested: { b: 2 } }
+			input.nested.parent = input
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: 1, nested: { b: 2 } })
+		})
+
+		it("removes circular reference in array", () => {
+			const input: any = { a: 1, items: [] }
+			input.items.push(input)
+			input.items.push(2)
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: 1, items: [2] })
+		})
+
+		it("removes deeply nested circular reference", () => {
+			const input: any = { a: { b: { c: { d: 1 } } } }
+			input.a.b.c.loop = input.a
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: { b: { c: { d: 1 } } } })
+		})
+
+		it("handles multiple circular references", () => {
+			const input: any = { a: 1, b: 2 }
+			input.refA = input
+			input.refB = input
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: 1, b: 2 })
+		})
+
+		it("handles array containing multiple refs to same object", () => {
+			const shared: any = { x: 1 }
+			const input = { arr: [shared, shared, shared] }
+			// First occurrence is kept, subsequent refs to same object are removed
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ arr: [{ x: 1 }] })
+		})
+
+		it("works with inPlace=true", () => {
+			const input: any = { a: 1, nested: { b: 2 } }
+			input.nested.parent = input
+			const out = cleana(input, { circularReference: true, inPlace: true })
+			expect(out).toBe(input)
+			expect(input).toEqual({ a: 1, nested: { b: 2 } })
+		})
+
+		it("still cleans other values when circular reference enabled", () => {
+			const input: any = { a: null, b: "", c: 1 }
+			input.self = input
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ c: 1 })
+		})
+
+		it("handles circular array self-reference", () => {
+			const arr: any[] = [1, 2]
+			arr.push(arr)
+			const out = cleana(arr, { circularReference: true })
+			expect(out).toEqual([1, 2])
+		})
+
+		it("handles complex graph with multiple circular paths", () => {
+			const a: any = { name: "a" }
+			const b: any = { name: "b" }
+			const c: any = { name: "c" }
+			a.next = b
+			b.next = c
+			c.next = a // circular back to start
+			a.sibling = c
+			const out = cleana(a, { circularReference: true })
+			// First traversal: a -> b -> c, then c.next (a) is circular, a.sibling (c) is circular
+			expect(out).toEqual({ name: "a", next: { name: "b", next: { name: "c" } } })
+		})
+
+		it("removes circular ref but keeps other props on same object", () => {
+			const input: any = { a: 1, b: { x: 10, y: 20 } }
+			input.b.circular = input.b
+			const out = cleana(input, { circularReference: true })
+			expect(out).toEqual({ a: 1, b: { x: 10, y: 20 } })
+		})
+	})
 })

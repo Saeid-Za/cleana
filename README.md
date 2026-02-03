@@ -5,16 +5,22 @@ Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.
 [![npm version](https://img.shields.io/npm/v/cleana?color=yellow)](https://npmjs.com/package/cleana)
 [![npm downloads](https://img.shields.io/npm/dm/cleana?color=yellow)](https://npm.chart.dev/cleana)
 
-Cleana efficiently sanitize both JavaScript Objects and Arrays by removing unwanted values such as `undefined`, `NaN`, empty objects `{}` and empty arrays `[]`.
+A fast, lightweight utility for recursively cleaning JavaScript objects and arrays by removing unwanted values like `undefined`, `null`, `NaN`, empty strings, empty objects, and empty arrays.
 
-## Install
-
-Install package:
+## Installation
 
 ```sh
+# npm
 npm install cleana
+
+# pnpm
+pnpm add cleana
+
+# bun
+bun add cleana
 ```
-## Usage
+
+## Quick Start
 
 ```ts
 import { cleana } from "cleana"
@@ -33,45 +39,135 @@ const input = {
 	}
 }
 
-const output = cleana(input)
-
-/*
-{
-  value: "123",
-  nested: {
-    nestedValue: "456"
-  }
-}
-*/
+cleana(input)
+// => { value: "123", nested: { nestedValue: "456" } }
 ```
 
-## Configuration
+## Features
 
-Cleana takes argument object of type `CleanaOptions`:
+- **Recursive cleaning** - Traverses nested objects and arrays
+- **Structural sharing** - Unchanged subtrees reuse original references for memory efficiency
+- **Circular reference handling** - Optional detection and removal of circular references
+- **In-place mutation** - Option to mutate the original object instead of creating a copy
+- **Selective cleaning** - Fine-grained control over what gets removed
+- **Zero dependencies** - Lightweight (~1KB gzipped) with 100% test coverage
 
-| Option           | Type       | Description                                                                                                              | Default |
-| ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------ | ------- |
-| `cleanArray`     | `boolean`  | Remove empty arrays, e.g., `[]`                                                                                          | `true`  |
-| `cleanObject`    | `boolean`  | Remove empty objects, e.g., `{}`                                                                                         | `true`  |
-| `cleanNull`      | `boolean`  | Remove null values                                                                                                       | `true`  |
-| `cleanUndefined` | `boolean`  | Remove undefined values                                                                                                  | `true`  |
-| `cleanString`    | `boolean`  | Remove empty strings, e.g., `""`                                                                                         | `true`  |
-| `cleanNaN`       | `boolean`  | Remove NaN values                                                                                                        | `true`  |
-| `removeKeys`     | `string[]` | Forcefully remove keys, e.g., `["key1", "key2"]`                                                                         | `[]`    |
-| `removeValues`   | `any[]`    | Forcefully remove values, ie: ["someString", 123, false, `{key: "123"}`], using the `fast-deep-equal` to check equality. | `[]`    |
-| `inPlace`        | `boolean`  | Create a new object that is cleaned or mutate the object passed to it & clean in place                                   | `false` |
+## API
 
-## What makes this library unique
+```ts
+function cleana<T>(data: T, options?: CleanaOptions): Cleaned<T>
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `cleanNull` | `boolean` | `true` | Remove `null` values |
+| `cleanUndefined` | `boolean` | `true` | Remove `undefined` values |
+| `cleanString` | `boolean` | `true` | Remove empty strings `""` |
+| `cleanNaN` | `boolean` | `true` | Remove `NaN` values |
+| `cleanArray` | `boolean` | `true` | Remove empty arrays `[]` |
+| `cleanObject` | `boolean` | `true` | Remove empty objects `{}` |
+| `removeKeys` | `string[]` | `[]` | Remove properties by key name (at all nesting levels) |
+| `removeValues` | `any[]` | `[]` | Remove properties by value (supports deep equality) |
+| `inPlace` | `boolean` | `false` | Mutate the input instead of creating a new object |
+| `circularReference` | `boolean` | `false` | Detect and remove circular references |
+
+## Examples
+
+### Preserve specific empty values
+
+```ts
+// Keep null values
+cleana({ a: null, b: "", c: 42 }, { cleanNull: false })
+// => { a: null, c: 42 }
+
+// Keep empty strings
+cleana({ a: "", b: null, c: 42 }, { cleanString: false })
+// => { a: "", c: 42 }
+
+// Keep empty arrays and objects
+cleana({ a: [], b: {}, c: 42 }, { cleanArray: false, cleanObject: false })
+// => { a: [], b: {}, c: 42 }
+```
+
+### Remove specific keys
+
+Remove properties by key name across all nesting levels:
+
+```ts
+const input = {
+	id: 1,
+	password: "secret",
+	user: {
+		name: "John",
+		password: "hidden"
+	}
+}
+
+cleana(input, { removeKeys: ["password"] })
+// => { id: 1, user: { name: "John" } }
+```
+
+### Remove specific values
+
+Remove properties by value using deep equality comparison:
+
+```ts
+const input = {
+	a: 1,
+	b: 2,
+	c: { x: 1 },
+	d: { x: 2 }
+}
+
+cleana(input, { removeValues: [1, { x: 1 }] })
+// => { b: 2, d: { x: 2 } }
+```
+
+### In-place mutation
+
+Mutate the original object instead of creating a copy:
+
+```ts
+const input = { a: null, b: "", c: 42 }
+cleana(input, { inPlace: true })
+
+console.log(input)
+// => { c: 42 }
+```
+
+### Circular reference handling
+
+Handle objects with circular references safely:
+
+```ts
+const obj: any = { a: 1, nested: { b: 2 } }
+obj.self = obj
+obj.nested.parent = obj
+
+// Without circularReference option, this would cause issues
+// With the option enabled, circular refs are removed
+cleana(obj, { circularReference: true })
+// => { a: 1, nested: { b: 2 } }
+```
+
+> **Note:** Circular reference detection uses a `WeakSet` internally. Enable only when needed as it adds a small overhead.
+
+## Performance
+
+Cleana is optimized for speed through:
+
+- **Bitfield flags** - Options compiled into a single bitfield for fast boolean checks
+- **Lazy allocation** - Output objects/arrays created only when changes are detected
+- **Structural sharing** - Unchanged branches reuse original references
+- **Zero allocations on default path** - Pre-computed config for option-less calls
 
 Cleana is built on the work of [`fast-clean`](https://github.com/Youssef93/fast-clean), [`clean-deep`](https://github.com/nunofgs/clean-deep). [`deep-cleaner`](https://github.com/darksinge/deep-cleaner) and [`obj-clean`](https://www.npmjs.com/package/obj-clean).
 
 **Faster and More Efficient**
 <br>
 Cleana is designed to be quicker than its predecessors.
-
-![Benchmark for small-sized json](./assets/benchmark-small.png)
-
-Benchmark code is located [here](https://github.com/Saeid-Za/cleana/tree/main/benchmark).
 
 **All-in-One Features**
 <br>
@@ -81,59 +177,30 @@ Cleana combines the best functionalities from the libraries mentioned above. Thi
 <br>
 Cleana has no external dependencies. Its lightweight design helps keep your application running without unnecessary bloat. Cleana is around `1 KB` when Gzipped, and has `100%` test coverage.
 
+![Benchmark for small-sized json](./assets/benchmark-small.png)
+
+Benchmark code is available in the [benchmark directory](https://github.com/Saeid-Za/cleana/tree/main/benchmark).
+
 ---
 This benchmark runs against the available test cases, It is recommended to benchmark against your data using the benchmark source code.
 
-## Examples
-
-Do not Clean null Values
-```ts
-const options: CleanaOptions = { cleanNull: false }
-const input = { a: Number.NaN, b: null, c: "", d: 42 }
-
-cleana(input, options)
-// { d: 42, b: null }
-```
-Remove Specefic keys
-
-```ts
-const input = { a: { b: { c: 1, d: 2, e: 3 }, e: 5 } }
-const options = { removeKeys: ["e", "c"] }
-
-cleana(input, options)
-// { a: { b: { d: 2 } } }
-```
-
-Remove Specefic values
-```ts
-const input = { a: { b: { c: 1, d: 2, e: 3, u: "55", g: false }, e: 5 }, v: { g: 100 } }
-const options = { removeValues: [1, 3, false, "55", { g: 100 }] }
-
-cleana(input, options)
-// { a: { b: { d: 2 }, e: 5 } }
-```
-
-Clean in-place
-```ts
-const input = { a: null, b: Number.NaN, c: "", d: 42 }
-const options = { inPlace: true }
-
-cleana(input, options)
-// input is equal to `{d: 42}`
-```
-
 ## Development
 
-<details>
+```sh
+# Clone and install
+git clone https://github.com/Saeid-Za/cleana.git
+cd cleana
+bun install
 
-<summary>Local Development</summary>
+# Run tests
+bun test
 
-- Clone this repository
-- Install latest LTS version of [Node.js](https://nodejs.org/en/)
-- Install dependencies using `bun install`
-- Run interactive tests using `bun dev`
+# Run tests in watch mode
+bun dev
 
-</details>
+# Run benchmarks
+bun run benchmark
+```
 
 ## License
 

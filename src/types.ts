@@ -54,8 +54,14 @@ export type CleanaOptions = {
 	 * @default true
 	 */
 	cleanNaN?: boolean
-}
 
-export type InternalCleanaConfig = CleanaOptions & { visitedSet: WeakSet<any> }
+	/**
+	 * Handle circular references by removing them.
+	 * When enabled, circular references are detected and removed (treated as SKIP).
+	 * This adds a small overhead due to WeakSet tracking, so it's disabled by default.
+	 * @default false
+	 */
+	circularReference?: boolean
+}
 
 export type Cleaned<T> = T extends Array<infer U> ? Partial<U>[] : Partial<T>
