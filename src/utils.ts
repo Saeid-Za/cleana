@@ -9,7 +9,7 @@ export function deepEqual(itemA: any, itemB: any): boolean {
 			return false
 
 		let length: number
-		let i: number | [any, any]
+		let i: number
 
 		if (Array.isArray(itemA)) {
 			length = itemA.length
@@ -44,6 +44,10 @@ export function deepEqual(itemA: any, itemB: any): boolean {
 					return false
 			}
 			return true
+		}
+
+		if (itemA instanceof Date && itemB instanceof Date) {
+			return itemA.getTime() === itemB.getTime()
 		}
 
 		if (itemA.constructor === RegExp) {
