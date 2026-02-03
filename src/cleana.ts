@@ -48,8 +48,8 @@ const DEFAULT_NORMALIZED: Normalized = {
  * Normalize user options into a compact runtime config.
  * This function is called once per `cleana()` invocation.
  */
-function normalize(options: CleanaOptions = {}): Normalized {
-	if (!options || Reflect.ownKeys(options).length === 0)
+function normalize(options?: CleanaOptions): Normalized {
+	if (!options)
 		return DEFAULT_NORMALIZED
 
 	const removeKeys = options.removeKeys ?? []
@@ -92,7 +92,7 @@ function normalize(options: CleanaOptions = {}): Normalized {
  * Non-inPlace mode uses structural sharing:
  * unchanged subtrees reuse the original references.
  */
-export function cleana<T>(data: T, options: CleanaOptions = {}): Cleaned<T> {
+export function cleana<T>(data: T, options?: CleanaOptions): Cleaned<T> {
 	const cfg = normalize(options)
 
 	// Only bail on null/undefined; do not treat 0/false/"" as empty at the root.
