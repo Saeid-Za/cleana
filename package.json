@@ -4,7 +4,10 @@
 	"version": "2.0.0",
 	"description": "Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.",
 	"license": "MIT",
-	"repository": "Saeid-Za/cleana",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Saeid-Za/cleana.git"
+	},
 	"sideEffects": false,
 	"exports": {
 		".": {
