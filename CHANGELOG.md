@@ -1,5 +1,37 @@
 # Changelogs
 
+## v2.0.0
+
+[compare changes](https://github.com/Saeid-Za/cleana/compare/v1.1.1...v2.0.0)
+
+### 🔥 Performance
+
+- Apply additional optimizations to improve overall performance ([52bd8df](https://github.com/Saeid-Za/cleana/commit/52bd8df))
+
+### 🩹 Fixes
+
+- Enhance deepEqual function to correctly compare Date objects ([9fa0b14](https://github.com/Saeid-Za/cleana/commit/9fa0b14))
+
+### 💅 Refactors
+
+- Optimize cleana normalization by introducing shared constants for default configurations ([2a802af](https://github.com/Saeid-Za/cleana/commit/2a802af))
+- Update normalize and cleana functions to accept optional options parameter ([108e27d](https://github.com/Saeid-Za/cleana/commit/108e27d))
+
+### 🏡 Chore
+
+- GitHub Actions CI ([96bdc75](https://github.com/Saeid-Za/cleana/commit/96bdc75))
+- Update dependencies ([2498a8a](https://github.com/Saeid-Za/cleana/commit/2498a8a))
+- Adding custom benchmark scripts ([0336ec1](https://github.com/Saeid-Za/cleana/commit/0336ec1))
+
+### ✅ Tests
+
+- Add test suites for edge cases ([b78c71b](https://github.com/Saeid-Za/cleana/commit/b78c71b))
+- Enhance cleana test suite with detailed cases for root values, default cleaning, options, and nested structures ([37aa8f8](https://github.com/Saeid-Za/cleana/commit/37aa8f8))
+
+### ❤️ Contributors
+
+- Saeid Zareie <saeid.za98@gmail.com>
+
 ## v1.1.1
 
 [compare changes](https://github.com/Saeid-Za/cleana/compare/v1.1.0...v1.1.1)
