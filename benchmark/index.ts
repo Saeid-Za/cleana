@@ -3,7 +3,7 @@ import { clean as deepCleaner } from "deep-cleaner"
 import { clean as fastClean, ICleanerOptions } from "fast-clean"
 import { bench, run, summary } from "mitata"
 import objClean from "obj-clean"
-import { cleana, CleanaOptions } from "../src"
+import { cleana, CleanaOptions } from "../dist/index.mjs"
 import heavy from "./data/heavy.json"
 import medium from "./data/medium.json"
 import small from "./data/small.json"
@@ -39,6 +39,8 @@ const deepCleanerOptions = {
 	clone: true,
 }
 
+const onlyCleanaFastClean = process.argv.includes("--only-cleana-fastclean")
+
 summary(() => {
 	bench("Cleana - Small Sized File", () => {
 		return cleana(small, cleanaOptions)
@@ -48,17 +50,19 @@ summary(() => {
 		return fastClean(small, fastCleanOptions)
 	})
 
-	bench("Clean Deep - Small Sized File", () => {
-		return cleanDeep(small, cleanDeepOptions)
-	})
+	if (!onlyCleanaFastClean) {
+		bench("Clean Deep - Small Sized File", () => {
+			return cleanDeep(small, cleanDeepOptions)
+		})
 
-	bench("Deep Cleaner - Small Sized File", () => {
-		return deepCleaner(small, deepCleanerOptions)
-	})
+		bench("Deep Cleaner - Small Sized File", () => {
+			return deepCleaner(small, deepCleanerOptions)
+		})
 
-	bench("Obj Clean - Small Sized File", () => {
-		return objClean(small, { cleanArrays: true, preserveArrays: false })
-	})
+		bench("Obj Clean - Small Sized File", () => {
+			return objClean(small, { cleanArrays: true, preserveArrays: false })
+		})
+	}
 })
 
 summary(() => {
@@ -70,17 +74,19 @@ summary(() => {
 		return fastClean(medium, fastCleanOptions)
 	})
 
-	bench("Clean Deep - Medium Sized File", () => {
-		return cleanDeep(medium, cleanDeepOptions)
-	})
+	if (!onlyCleanaFastClean) {
+		bench("Clean Deep - Medium Sized File", () => {
+			return cleanDeep(medium, cleanDeepOptions)
+		})
 
-	bench("Obj Clean - Medium Sized File", () => {
-		return objClean(medium, { cleanArrays: true, preserveArrays: false })
-	})
+		bench("Obj Clean - Medium Sized File", () => {
+			return objClean(medium, { cleanArrays: true, preserveArrays: false })
+		})
 
-	bench("Deep Cleaner - Medium Sized File", () => {
-		return deepCleaner(medium, deepCleanerOptions)
-	})
+		bench("Deep Cleaner - Medium Sized File", () => {
+			return deepCleaner(medium, deepCleanerOptions)
+		})
+	}
 })
 
 summary(() => {
@@ -92,13 +98,15 @@ summary(() => {
 		return fastClean(heavy, fastCleanOptions)
 	})
 
-	bench("Clean Deep - Heavy Sized File", () => {
-		return cleanDeep(heavy, cleanDeepOptions)
-	})
+	if (!onlyCleanaFastClean) {
+		bench("Clean Deep - Heavy Sized File", () => {
+			return cleanDeep(heavy, cleanDeepOptions)
+		})
 
-	bench("Obj Clean - Heavy Sized File", () => {
-		return objClean(heavy, { cleanArrays: true, preserveArrays: false })
-	})
+		bench("Obj Clean - Heavy Sized File", () => {
+			return objClean(heavy, { cleanArrays: true, preserveArrays: false })
+		})
+	}
 })
 
 run()

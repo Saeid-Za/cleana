@@ -16,6 +16,7 @@ const antfuConfig = antfu({
 		"ts/consistent-type-imports": "off",
 		"node/prefer-global/process": "off",
 		"brace-style": ["warn", "stroustrup", { allowSingleLine: false }],
+		"antfu/no-import-dist": "off",
 	},
 	ignores: [
 		"**/benchmark/data/**",

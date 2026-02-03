@@ -24,7 +24,8 @@
 		"typecheck": "tsc --noEmit -p ./tsconfig.json",
 		"prepack": "npm run build",
 		"prepare:benchmark": "jiti benchmark/init.ts",
-		"benchmark": "jiti benchmark/index.ts",
+		"benchmark:all": "npm run build && jiti benchmark/index.ts",
+		"benchmark": "npm run build && jiti benchmark/index.ts --only-cleana-fastclean",
 		"release": "npm run test && npm publish && git push --follow-tags",
 		"test": "vitest run --coverage"
 	},
