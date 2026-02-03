@@ -283,16 +283,24 @@ function cleanObject(obj: Record<string, any>, cfg: Normalized): any | typeof SK
 
 			// Still unchanged: stash this pair for potential later materialization.
 			if (stashCount === 0) {
-				k1 = k; v1 = orig; stashCount = 1
+				k1 = k
+				v1 = orig
+				stashCount = 1
 			}
 			else if (stashCount === 1) {
-				k2 = k; v2 = orig; stashCount = 2
+				k2 = k
+				v2 = orig
+				stashCount = 2
 			}
 			else if (stashCount === 2) {
-				k3 = k; v3 = orig; stashCount = 3
+				k3 = k
+				v3 = orig
+				stashCount = 3
 			}
 			else if (stashCount === 3) {
-				k4 = k; v4 = orig; stashCount = 4
+				k4 = k
+				v4 = orig
+				stashCount = 4
 			}
 			else {
 				// Many unchanged keys: materialize output and continue normally.

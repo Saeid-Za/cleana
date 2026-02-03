@@ -22,15 +22,14 @@
 	],
 	"scripts": {
 		"build": "obuild ./src/index.ts",
-		"dev": "vitest dev",
 		"lint": "eslint . --fix",
-		"typecheck": "tsc --noEmit -p ./tsconfig.json",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run --coverage",
+		"dev": "vitest dev",
+		"benchmark": "npm run build && jiti benchmark/index.ts",
+		"benchmark:all": "npm run build && jiti benchmark/index.ts --only-cleana-fastclean",
 		"prepack": "npm run build",
-		"prepare:benchmark": "jiti benchmark/init.ts",
-		"benchmark:all": "npm run build && jiti benchmark/index.ts",
-		"benchmark": "npm run build && jiti benchmark/index.ts --only-cleana-fastclean",
-		"release": "npm run typecheck && npm run lint && npm run test && npm publish && git push --follow-tags",
-		"test": "vitest run --coverage"
+		"release": "npm run typecheck && npm run lint && npm run test && npm publish && git push --follow-tags"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^7.2.0",
