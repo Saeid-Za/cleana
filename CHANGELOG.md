@@ -8,38 +8,6 @@
 
 - Add circular reference handling option ([b9797ee](https://github.com/Saeid-Za/cleana/commit/b9797ee))
 
-### 🔥 Performance
-
-- Apply additional optimizations to improve overall performance ([52bd8df](https://github.com/Saeid-Za/cleana/commit/52bd8df))
-
-### 🩹 Fixes
-
-- Enhance deepEqual function to correctly compare Date objects ([9fa0b14](https://github.com/Saeid-Za/cleana/commit/9fa0b14))
-
-### 💅 Refactors
-
-- Optimize cleana normalization by introducing shared constants for default configurations ([2a802af](https://github.com/Saeid-Za/cleana/commit/2a802af))
-- Update normalize and cleana functions to accept optional options parameter ([108e27d](https://github.com/Saeid-Za/cleana/commit/108e27d))
-
-### 📖 Documentation
-
-- Updated changelog.md ([ef2f449](https://github.com/Saeid-Za/cleana/commit/ef2f449))
-
-### 🏡 Chore
-
-- Update dependencies ([2498a8a](https://github.com/Saeid-Za/cleana/commit/2498a8a))
-- Adding custom benchmark scripts ([0336ec1](https://github.com/Saeid-Za/cleana/commit/0336ec1))
-- **release:** V2.0.0 ([eca8e18](https://github.com/Saeid-Za/cleana/commit/eca8e18))
-- Update repository field in package.json to use git URL format ([0aafd9d](https://github.com/Saeid-Za/cleana/commit/0aafd9d))
-- Enhance CI workflow with concurrency, permissions, and caching for Bun dependencies ([4afaf1c](https://github.com/Saeid-Za/cleana/commit/4afaf1c))
-- Update CI workflow to support manual triggers and improve concurrency grouping ([1be097a](https://github.com/Saeid-Za/cleana/commit/1be097a))
-- Update release script to include type checking and linting before publishing ([c396b87](https://github.com/Saeid-Za/cleana/commit/c396b87))
-- Fixing lint issues ([8b32851](https://github.com/Saeid-Za/cleana/commit/8b32851))
-
-### ✅ Tests
-
-- Add test suites for edge cases ([b78c71b](https://github.com/Saeid-Za/cleana/commit/b78c71b))
-- Enhance cleana test suite with detailed cases for root values, default cleaning, options, and nested structures ([37aa8f8](https://github.com/Saeid-Za/cleana/commit/37aa8f8))
 
 ### ❤️ Contributors
 
