@@ -4,9 +4,15 @@
 
 [compare changes](https://github.com/Saeid-Za/cleana/compare/v1.1.1...v2.0.0)
 
+Major release: benchmarks show significantly improved throughput and **memory usage cut in half**, plus better Date handling in `removeValues` and a leaner ESM-only build. **If you use CommonJS (`require()`), you must migrate to ESM or use a bundler**—see breaking changes below.
+
+### ⚠️ Breaking changes
+
+- **CJS support removed.** The package now ships only ESM (`import`). If you use `require("cleana")` or run in a CJS-only environment (e.g. some Node scripts without `"type": "module"`), switch to `import { cleana } from "cleana"` and ensure your project supports ESM, or bundle cleana with your app.
+
 ### 🔥 Performance
 
-- Apply additional optimizations to improve overall performance ([52bd8df](https://github.com/Saeid-Za/cleana/commit/52bd8df))
+- Apply additional optimizations to improve overall performance ([52bd8df](https://github.com/Saeid-Za/cleana/commit/52bd8df)); benchmarks show higher throughput and ~50% lower memory usage
 
 ### 🩹 Fixes
 
