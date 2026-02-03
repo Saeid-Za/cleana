@@ -5,9 +5,10 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -56,4 +57,4 @@ jobs:
       - name: Run tests
         env:
           CI: true
-        run: bun test --runInBand
+        run: bun run test
