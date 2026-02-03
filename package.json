@@ -1,7 +1,7 @@
 {
 	"name": "cleana",
 	"type": "module",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"description": "Clean JavaScript Objects and Arrays, recursively. Lightweight and Fast.",
 	"license": "MIT",
 	"repository": {
