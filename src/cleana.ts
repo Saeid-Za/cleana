@@ -227,10 +227,14 @@ function cleanObject(obj: Record<string, any>, cfg: Normalized): any | typeof SK
 		let kept = false
 
 		// Stash up to 4 unchanged keys without allocating arrays/objects.
-		let k1: string | null = null; let v1: any
-		let k2: string | null = null; let v2: any
-		let k3: string | null = null; let v3: any
-		let k4: string | null = null; let v4: any
+		let k1: string | null = null
+		let v1: any
+		let k2: string | null = null
+		let v2: any
+		let k3: string | null = null
+		let v3: any
+		let k4: string | null = null
+		let v4: any
 		let stashCount = 0
 
 		for (const k in obj) {

@@ -29,7 +29,7 @@
 		"prepare:benchmark": "jiti benchmark/init.ts",
 		"benchmark:all": "npm run build && jiti benchmark/index.ts",
 		"benchmark": "npm run build && jiti benchmark/index.ts --only-cleana-fastclean",
-		"release": "npm run test && npm publish && git push --follow-tags",
+		"release": "npm run typecheck && npm run lint && npm run test && npm publish && git push --follow-tags",
 		"test": "vitest run --coverage"
 	},
 	"devDependencies": {
