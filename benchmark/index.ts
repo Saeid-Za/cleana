@@ -1,14 +1,14 @@
-import cleanDeep from "clean-deep"
-import { clean as deepCleaner } from "deep-cleaner"
-import { clean as fastClean, ICleanerOptions } from "fast-clean"
+import cleanDeep, { CleanOptions as CleanDeepOptions } from "clean-deep"
+import { clean as deepCleaner, CleanOptions as DeepCleanerOption } from "deep-cleaner"
+import { clean as fastClean, ICleanerOptions as FastCleanOptions } from "fast-clean"
 import { bench, run, summary } from "mitata"
-import objClean from "obj-clean"
+import objClean, { Options as ObjCleanOptions } from "obj-clean"
 import { cleana, CleanaOptions } from "../dist/index.mjs"
 import heavy from "./data/heavy.json"
 import medium from "./data/medium.json"
 import small from "./data/small.json"
 
-const fastCleanOptions: ICleanerOptions = {
+const fastCleanOptions: FastCleanOptions = {
 	emptyArraysCleaner: true,
 	emptyObjectsCleaner: true,
 	emptyStringsCleaner: true,
@@ -17,7 +17,7 @@ const fastCleanOptions: ICleanerOptions = {
 	cleanInPlace: false,
 }
 
-const cleanDeepOptions = {
+const cleanDeepOptions: CleanDeepOptions = {
 	emptyArrays: true,
 	emptyObjects: true,
 	emptyStrings: true,
@@ -33,10 +33,18 @@ const cleanaOptions: CleanaOptions = {
 	cleanObject: true,
 	cleanString: true,
 	cleanUndefined: true,
+	circularReference: false,
+	inPlace: false,
 }
 
-const deepCleanerOptions = {
-	clone: true,
+const deepCleanerOptions: DeepCleanerOption = {
+	clone: false,
+	skipEmpty: false,
+}
+
+const objCleanOptiopns: ObjCleanOptions = {
+	cleanArrays: true,
+	preserveArrays: false,
 }
 
 const onlyCleanaFastClean = process.argv.includes("--only-cleana-fastclean")
@@ -60,7 +68,7 @@ summary(() => {
 		})
 
 		bench("Obj Clean - Small Sized File", () => {
-			return objClean(small, { cleanArrays: true, preserveArrays: false })
+			return objClean(small, objCleanOptiopns)
 		})
 	}
 })
@@ -80,7 +88,7 @@ summary(() => {
 		})
 
 		bench("Obj Clean - Medium Sized File", () => {
-			return objClean(medium, { cleanArrays: true, preserveArrays: false })
+			return objClean(medium, objCleanOptiopns)
 		})
 
 		bench("Deep Cleaner - Medium Sized File", () => {
@@ -104,7 +112,7 @@ summary(() => {
 		})
 
 		bench("Obj Clean - Heavy Sized File", () => {
-			return objClean(heavy, { cleanArrays: true, preserveArrays: false })
+			return objClean(heavy, objCleanOptiopns)
 		})
 	}
 })

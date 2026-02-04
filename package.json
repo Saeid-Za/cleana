@@ -26,8 +26,8 @@
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run --coverage",
 		"dev": "vitest dev",
-		"benchmark": "npm run build && jiti benchmark/index.ts",
-		"benchmark:all": "npm run build && jiti benchmark/index.ts --only-cleana-fastclean",
+		"benchmark": "npm run build && jiti benchmark/index.ts -- --only-cleana-fastclean",
+		"benchmark:all": "npm run build && jiti benchmark/index.ts",
 		"prepack": "npm run build",
 		"release": "npm run typecheck && npm run lint && npm run test && npm publish && git push --follow-tags"
 	},
